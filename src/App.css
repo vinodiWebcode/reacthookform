@@ -9,6 +9,9 @@
   padding-left: 0px;
   padding-right: 0px;
 }
+.mainContent {
+	margin-top: 128px;
+}
 .formSection {
   background: #f9f9f9;
 }
@@ -159,4 +162,33 @@ a.imageLink {
 .btnStyle {
   text-align: center;
   margin-top: 30px;
+}
+
+.selectFile {
+	position: relative;
+	width: 230px;
+  height: 40px;
+  background: #ebecf0;
+  color: #9696a2;
+  border: 1px solid #dfe0e4;
+  padding: 8px 15px;
+}
+
+.selectFile input {
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 99;
+	height: 40px;
+	margin: 0;
+	padding: 0;
+	display: block;
+	cursor: pointer;
+	width: 100%;
+}
+.selectFile-label{
+  color: #9696a2;
 }

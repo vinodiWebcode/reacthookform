@@ -7,7 +7,7 @@ import "../App.css";
 function Header() {
   return (
     <>
-      <Navbar bg="white">
+      <Navbar bg="white" className="fixed-top">
         <Container>
           <Navbar.Brand href="#home">
             <img

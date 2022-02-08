@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import { MdAttachFile } from 'react-icons/md';
 import "../App.css";
 
 // type FormData = {
@@ -35,7 +36,7 @@ export default function Form() {
     response: "",
   });
 
-  const handleInputChange = (event:any) => {
+  const handleInputChange = (event: any) => {
     setState((prevProps) => ({
       ...prevProps,
       [event.target.name]: event.target.value,
@@ -138,31 +139,46 @@ export default function Form() {
             <div className="formTitle">
               <h4>Submit your application</h4>
             </div>
-            <div className="formStyle">
-              <label>Resume/CV </label>
-              <input
-                type="file"
-                name="file"
-                value={state.file}
-                required
-                onChange={handleInputChange}
-              />
+            <div className="formStyle row">
+              <div className="col-md-6 col-lg-3">
+                <label>Resume/CV </label>
+              </div>
+              <div className="col-md-6 col-lg-9">
+                <div className="selectFile">
+                  <span className="selectFile-label"><MdAttachFile />
+                    ATTACH RESUME/CV</span>
+                  <input
+                    type="file"
+                    name="file"
+                    value={state.file}
+                    required
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="formStyle row">
+              <div className="col-md-6 col-lg-3">
+                <label>Full name</label>
+              </div>
+              <div className="col-md-6 col-lg-9">
+                <input
+                  type="text"
+                  name="name"
+                  required
+                  autoComplete="off"
+                  value={state.name}
+                  onChange={handleInputChange}
+                />
+              </div>
             </div>
 
             <div className="formStyle">
-              <label>Full name</label>
-              <input
-                type="text"
-                name="name"
-                required
-                autoComplete="off"
-                value={state.name}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="formStyle">
+            <div className="col-md-6 col-lg-3">
               <label>Email</label>
+              </div>
+              <div className="col-md-6 col-lg-9">
               <input
                 type="text"
                 name="email"
@@ -170,10 +186,15 @@ export default function Form() {
                 value={state.email}
                 onChange={handleInputChange}
               />
+              </div>
             </div>
 
             <div className="formStyle">
+            <div className="col-md-6 col-lg-3">
               <label>Phone</label>
+              </div>
+              <div className="col-md-6 col-lg-9">
+
               <input
                 type="text"
                 name="phone"
@@ -182,9 +203,14 @@ export default function Form() {
                 onChange={handleInputChange}
               />
             </div>
+            </div>
 
             <div className="formStyle">
+            <div className="col-md-6 col-lg-3">
+
               <label>Current company </label>
+              </div>
+              <div className="col-md-6 col-lg-9">
               <input
                 type="text"
                 name="company"
@@ -192,12 +218,18 @@ export default function Form() {
                 value={state.company}
                 onChange={handleInputChange}
               />
+                            </div>
+
             </div>
 
             <div className="linkStyle">
               <h4>Links</h4>
               <div className="formStyle">
+              <div className="col-md-6 col-lg-3">
+
                 <label>LinkedIn URL </label>
+                </div>
+              <div className="col-md-6 col-lg-9">
                 <input
                   type="text"
                   name="linkedin"
@@ -205,10 +237,16 @@ export default function Form() {
                   value={state.linkedin}
                   onChange={handleInputChange}
                 />
+                              </div>
+
               </div>
 
               <div className="formStyle">
+              <div className="col-md-6 col-lg-3">
+
                 <label>Twitter URL </label>
+                </div>
+              <div className="col-md-6 col-lg-9">
                 <input
                   type="text"
                   name="twitter"
@@ -216,10 +254,16 @@ export default function Form() {
                   value={state.twitter}
                   onChange={handleInputChange}
                 />
+                              </div>
+
               </div>
 
               <div className="formStyle">
+              <div className="col-md-6 col-lg-3">
+
                 <label>GitHub URL </label>
+                </div>
+              <div className="col-md-6 col-lg-9">
                 <input
                   type="text"
                   name="gitHub"
@@ -227,10 +271,16 @@ export default function Form() {
                   value={state.gitHub}
                   onChange={handleInputChange}
                 />
+                              </div>
+
               </div>
 
               <div className="formStyle">
+              <div className="col-md-6 col-lg-3">
+
                 <label>Portfolio URL </label>
+                </div>
+              <div className="col-md-6 col-lg-9">
                 <input
                   type="text"
                   name="portfolio"
@@ -238,10 +288,16 @@ export default function Form() {
                   value={state.portfolio}
                   onChange={handleInputChange}
                 />
+                              </div>
+
               </div>
 
               <div className="formStyle">
+              <div className="col-md-6 col-lg-3">
+
                 <label>Other website </label>
+                </div>
+              <div className="col-md-6 col-lg-9">
                 <input
                   type="text"
                   name="website"
@@ -249,6 +305,7 @@ export default function Form() {
                   value={state.website}
                   onChange={handleInputChange}
                 />
+              </div>
               </div>
             </div>
 
