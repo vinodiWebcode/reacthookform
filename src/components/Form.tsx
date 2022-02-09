@@ -182,6 +182,7 @@ export default function Form() {
               <input
                 type="text"
                 name="email"
+                minLength={10}
                 required
                 value={state.email}
                 onChange={handleInputChange}
