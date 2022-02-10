@@ -4,7 +4,7 @@ import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Header from "../src/components/Header";
 import Form from "../src/components/Form";
-import Select from "../src/components/Select";
+// import Select from "../src/components/Select";
 import Footer from "../src/components/Footer";
 
 function App() {
@@ -12,7 +12,6 @@ function App() {
     <>
       <Header />
       <Form />
-      <Select/>
       <Footer />
     </>
   );

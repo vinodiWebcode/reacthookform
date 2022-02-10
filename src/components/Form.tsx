@@ -1,124 +1,84 @@
 import React, { useState } from "react";
-import { Button } from "react-bootstrap";
-import { MdAttachFile } from 'react-icons/md';
+import { useForm } from "react-hook-form";
+import ReCAPTCHA from "react-google-recaptcha";
 import "../App.css";
+import FormButton from "./FormButton";
+import Prefer from "./Prefer";
+import { MdAttachFile } from "react-icons/md";
+import { Input } from "./Input";
+import AddInfo from "./AddInfo";
+import InfoForm from "./InfoForm";
+import Select from "./Select";
+import { cloudStorageRef, db,storage} from './Backend';
+import { set,ref } from "firebase/database";
 
-// type FormData = {
-//     firstName: string;
-//     file: any;
-//     name: string;
-//     email: string;
-//     phone: any;
-//     company: string;
-//     linkedin: string;
-//     twitter: string;
-//     gitHub: string;
-//     portfolio: string;
-//     website: string;
-//     addtext: string;
-//     response: string;
-//     minLength: any;
-//   };
-
+import { getDownloadURL, uploadBytesResumable } from "firebase/storage";
 export default function Form() {
-  const [state, setState] = useState({
-    file: "",
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    linkedin: "",
-    twitter: "",
-    gitHub: "",
-    portfolio: "",
-    website: "",
-    addtext: "",
-    response: "",
-  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
+  
+  const [captchaVerify, setCaptchaVerify] = useState(false);
+  console.log("Captcha value:", captchaVerify);
 
-  const handleInputChange = (event: any) => {
-    setState((prevProps) => ({
-      ...prevProps,
-      [event.target.name]: event.target.value,
-    }));
-  };
+  
+  const uploadResume=(data:{[x: string]: any})=>{
+      const storageRef = cloudStorageRef(storage,'some-random-name');
+      const uploadTask = uploadBytesResumable(storageRef,data.Resume[0])
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
-    const {
-      file,
-      name,
-      email,
-      phone,
-      company,
-      linkedin,
-      twitter,
-      gitHub,
-      portfolio,
-      website,
-      addtext,
-      response,
-    } = state;
-    if (
-      file &&
-      name &&
-      email &&
-      phone &&
-      company &&
-      linkedin &&
-      twitter &&
-      gitHub &&
-      portfolio &&
-      website &&
-      addtext &&
-      response
-    ) {
-      const res = await fetch(
-        "https://reactform-32140-default-rtdb.firebaseio.com/reactformdata.json",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            file,
-            name,
-            email,
-            phone,
-            company,
-            linkedin,
-            twitter,
-            gitHub,
-            portfolio,
-            website,
-            addtext,
-            response,
-          }),
-        }
-      );
-      if (res) {
-        setState({
-          file: "",
-          name: "",
-          email: "",
-          phone: "",
-          company: "",
-          linkedin: "",
-          twitter: "",
-          gitHub: "",
-          portfolio: "",
-          website: "",
-          addtext: "",
-          response: "",
-        });
-        alert("Data Store Successfully");
-      }
-    } else {
-      alert("Please fill all the field");
-    }
-    console.log(state);
-  };
-
+      uploadTask.on('state_changed', 
+          (snapshot) => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          }, 
+          (error) => {
+            // Handle unsuccessful uploads
+          }, 
+          () => {
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              console.log('File available at', downloadURL);
+              data.Resume = downloadURL
+                // addDoc(collection(db, "candidatess"), data)
+                // .then(() => {
+                //   console.log("Data save successfully");
+                //   reset();
+                // })
+                // .catch((e: any) => console.log("error", e))
+                set(ref(db, "candidatess"), data)
+                .then(() => {
+                  // alert(data);
+                  console.log("DONE");
+                  reset();
+                })
+                .catch((e) => console.log("error", e));
+                // set(ref(db, "candidatess"), data)
+                // .then(() => {
+                //   alert(JSON.stringify(data));
+                //   console.log("DONE");
+                //   reset();
+                // })
+                // .catch((e) => console.log("error", e));
+            });
+          }
+        );
+  }
+         
+    
   return (
     <div className="mainContent">
       <div className="content-section">
@@ -135,252 +95,75 @@ export default function Form() {
       </div>
       <div className="formSection">
         <div className="container">
-          <form onSubmit={handleSubmit} method="POST">
+          <form onSubmit={handleSubmit((data) => {
+           uploadResume(data)
+                console.log(data)
+              
+            })}            
+          >
+            {/* file uploading */}
+
             <div className="formTitle">
               <h4>Submit your application</h4>
             </div>
-            <div className="formStyle row">
-              <div className="col-md-6 col-lg-3">
-                <label>Resume/CV </label>
+            <div className="formStyle row rowMarBot">
+              <div className="col-md-6 col-lg-4">
+                <label className="labelMrgin">Resume/CV </label>
               </div>
-              <div className="col-md-6 col-lg-9">
+              <div className="col-md-6 col-lg-8">
                 <div className="selectFile">
-                  <span className="selectFile-label"><MdAttachFile />
-                    ATTACH RESUME/CV</span>
-                  <input
-                    type="file"
-                    name="file"
-                    value={state.file}
-                    required
-                    onChange={handleInputChange}
-                  />
+                  <span className="selectFile-label">
+                    <MdAttachFile />
+                    ATTACH RESUME/CV
+                  </span>
+                
+                  <input type='file' accept='application/pdf'  {...register?{...register('Resume')}:null} />
+                  {errors.file && <p>{errors.file.message}</p>}
                 </div>
               </div>
             </div>
 
-            <div className="formStyle row">
-              <div className="col-md-6 col-lg-3">
-                <label>Full name</label>
-              </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="name"
-                  required
-                  autoComplete="off"
-                  value={state.name}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
 
-            <div className="formStyle">
-            <div className="col-md-6 col-lg-3">
-              <label>Email</label>
-              </div>
-              <div className="col-md-6 col-lg-9">
-              <input
-                type="text"
-                name="email"
-                minLength={10}
-                required
-                value={state.email}
-                onChange={handleInputChange}
+
+            {/* <Fileupload register={register} errors={errors} /> */}
+            <Input Label="Full Name" register={register} errors={errors} />
+            <Input Label="Email" register={register} errors={errors} />
+            <Input Label="Phone" register={register} errors={errors} />
+            <Input
+              Label="Current company"
+              register={register}
+              errors={errors}
+            />
+            <h4>Links</h4>
+            <Input Label="LinkedIn URL" register={register} errors={errors} />
+            <Input Label="Github URL" register={register} errors={errors} />
+            <Input Label="Twitter URL" register={register} errors={errors} />
+            <Input Label="Other Website" register={register} errors={errors} />
+            <Prefer
+              Label="If you'd like, please share your pronouns with us."
+              h4="Preferred pronouns"
+              register={register}
+              errors={errors}
+            />
+            <AddInfo
+              h4="Additional information"
+              register={register}
+              errors={errors}
+            />
+            <InfoForm />
+            <Select register={register} errors={errors} />
+            <div className="CaptchaCont">
+              <ReCAPTCHA
+                sitekey="6LeSkmkeAAAAAEE5vg19VItyCxdusl5xRCFYFrna"
+                onChange={() => setCaptchaVerify(true)}
+                onErrored={() => setCaptchaVerify(false)}
               />
-              </div>
+
+              {Object.keys(errors).length > 0 && !captchaVerify && (
+                <p>Please Select Captcha</p>
+              )}
             </div>
-
-            <div className="formStyle">
-            <div className="col-md-6 col-lg-3">
-              <label>Phone</label>
-              </div>
-              <div className="col-md-6 col-lg-9">
-
-              <input
-                type="text"
-                name="phone"
-                required
-                value={state.phone}
-                onChange={handleInputChange}
-              />
-            </div>
-            </div>
-
-            <div className="formStyle">
-            <div className="col-md-6 col-lg-3">
-
-              <label>Current company </label>
-              </div>
-              <div className="col-md-6 col-lg-9">
-              <input
-                type="text"
-                name="company"
-                required
-                value={state.company}
-                onChange={handleInputChange}
-              />
-                            </div>
-
-            </div>
-
-            <div className="linkStyle">
-              <h4>Links</h4>
-              <div className="formStyle">
-              <div className="col-md-6 col-lg-3">
-
-                <label>LinkedIn URL </label>
-                </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="linkedin"
-                  required
-                  value={state.linkedin}
-                  onChange={handleInputChange}
-                />
-                              </div>
-
-              </div>
-
-              <div className="formStyle">
-              <div className="col-md-6 col-lg-3">
-
-                <label>Twitter URL </label>
-                </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="twitter"
-                  required
-                  value={state.twitter}
-                  onChange={handleInputChange}
-                />
-                              </div>
-
-              </div>
-
-              <div className="formStyle">
-              <div className="col-md-6 col-lg-3">
-
-                <label>GitHub URL </label>
-                </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="gitHub"
-                  required
-                  value={state.gitHub}
-                  onChange={handleInputChange}
-                />
-                              </div>
-
-              </div>
-
-              <div className="formStyle">
-              <div className="col-md-6 col-lg-3">
-
-                <label>Portfolio URL </label>
-                </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="portfolio"
-                  required
-                  value={state.portfolio}
-                  onChange={handleInputChange}
-                />
-                              </div>
-
-              </div>
-
-              <div className="formStyle">
-              <div className="col-md-6 col-lg-3">
-
-                <label>Other website </label>
-                </div>
-              <div className="col-md-6 col-lg-9">
-                <input
-                  type="text"
-                  name="website"
-                  required
-                  value={state.website}
-                  onChange={handleInputChange}
-                />
-              </div>
-              </div>
-            </div>
-
-            <h4 data-qa="cardName">Preferred pronouns</h4>
-            <input type="hidden" value="" name="" />
-            <ul>
-              <li className="customQuestion">
-                <label>
-                  <div className="">
-                    <div className="text">
-                      If you'd like, please share your pronouns with us.
-                    </div>
-                  </div>
-                  <div className="">
-                    <input
-                      className=""
-                      type="text"
-                      placeholder="Type your response"
-                      name="response"
-                      required
-                      value={state.response}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </label>
-              </li>
-            </ul>
-            <label>
-              <h4>Additional information</h4>
-            </label>
-            <div className="application-additional">
-              <textarea
-                placeholder="Add a cover letter or anything else you want to share."
-                value={state.addtext}
-                onChange={handleInputChange}
-                name="addtext"
-              ></textarea>
-            </div>
-
-            <div className="btnStyle">
-              <div className="">
-                <Button
-                  variant="primary"
-                  className="justify-content-center"
-                  size="lg"
-                  type="submit"
-                >
-                  Submit application
-                </Button>
-              </div>
-            </div>
-
-            {/* info swction */}
-
-            <div className="" data-qa="eeo-section">
-              <hr />
-              <h4>
-                U.S. Equal Employment Opportunity information &nbsp;{" "}
-                <span className="eeo-light-text">
-                  (Completion is voluntary and will not subject you to adverse
-                  treatment)
-                </span>
-              </h4>
-              <p>
-                Our company values diversity. To ensure that we comply with
-                reporting requirements and to learn more about how we can
-                increase diversity in our candidate pool, we invite you to
-                voluntarily provide demographic information in a confidential
-                survey at the end of this application. Providing this
-                information is optional. It will not be accessible or used in
-                the hiring process, and has no effect on your opportunity for
-                employment.
-              </p>
-            </div>
+            <FormButton />
           </form>
         </div>
       </div>
