@@ -51,8 +51,8 @@ export const Input: React.FC<Props> = ({
       <div className="col-md-6 col-lg-8">
         <input  {...register(toPascalCase(Label),getValidation())} />
         {errors?errors[toPascalCase(Label)]?.type ===' required' && <p>REQUIRED FIELD</p>:null}
-        {errors?errors[toPascalCase(Label)]?.type==='pattern' && <p>Invalid value</p>:null}
-        {errors?errors[toPascalCase(Label)]?.type==='minLength' && <p>Need Min 10 char Length error</p>:null}
+        {errors?errors[toPascalCase(Label)]?.type==='pattern' && <p>Invalid VALUE</p>:null}
+        {errors?errors[toPascalCase(Label)]?.type==='minLength' && <p>Min Length error</p>:null}
       </div>
     </div>
   );

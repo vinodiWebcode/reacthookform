@@ -10,7 +10,6 @@ interface Props {
 
 const Select: React.FC<Props> = ({ register, errors }): JSX.Element => {
   const [raceDescription, setRaceDescription] = useState(false);
-  // const Select = ({register,}) => {
   const gender = ["Male", "Female", "Decline to say"];
   const race = [
     "Hispanic or Latino",
@@ -61,22 +60,7 @@ const Select: React.FC<Props> = ({ register, errors }): JSX.Element => {
               ))}
             </select>
             {errors?.race && <p>Select race Value</p>}
-          </div>
-        </div>
-        <div className="col-md-6 col-lg-4">
-          <label>Veteran status</label>
-        </div>
-        <div className="col-md-6 col-lg-8">
-          <div className="w-100">
-            <select className="w-100" {...register("race", { required: true })}>
-              <option value="">Select...</option>
-              {Vet.map((item) => (
-                <option>{item}</option>
-              ))}
-            </select>
-            {errors?.Vet && <p>Select Vet Value</p>}
-
-            {raceDescription ? (
+            {raceDescription ? <div>
               <div>
                 <div className="infoStyle">
                   <div>Hispanic or Latino</div>
@@ -138,7 +122,23 @@ const Select: React.FC<Props> = ({ register, errors }): JSX.Element => {
                   </p>
                 </div>
               </div>
-            ) : null}
+            </div> : null}
+          </div>
+        </div>
+        <div className="col-md-6 col-lg-4">
+          <label>Veteran status</label>
+        </div>
+        <div className="col-md-6 col-lg-8">
+          <div className="w-100">
+            <select className="w-100" {...register("Vet", { required: true })}>
+              <option value="">Select...</option>
+              {Vet.map((item) => (
+                <option>{item}</option>
+              ))}
+            </select>
+            {errors?.Vet && <p>Select Vet Value</p>}
+
+           
           </div>
         </div>
       </div>
