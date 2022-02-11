@@ -2,8 +2,6 @@ import React from "react";
 import footerlogo from "../images/footerlogo-.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Row } from "react-bootstrap";
-
-// import "../App.css";
 function Footer() {
   return (
     <footer>

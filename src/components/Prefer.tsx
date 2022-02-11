@@ -15,14 +15,14 @@ const Prefer: React.FC<Props> = ({
   return (
     <div className="preferStyle">
       <h4 data-qa="cardName">{h4}</h4>
-            <label className="text">{Label}</label>
-            <div>
-              <input
-                type={`text`}
-                placeholder="Type your response"
-                {...register('PreferedPronoun')}
-              />
-            </div>
+      <label className="text">{Label}</label>
+      <div>
+        <input
+          type={`text`}
+          placeholder="Type your response"
+          {...register("PreferedPronoun")}
+        />
+      </div>
     </div>
   );
 };

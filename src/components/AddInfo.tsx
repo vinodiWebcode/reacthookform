@@ -14,10 +14,7 @@ const AddInfo: React.FC<Props> = ({ h4, register, errors }): JSX.Element => {
       <div className="application-additional">
         <textarea
           placeholder="Add a cover letter or anything else you want to share."
-          // {...register("h4", { required: true })}
-          {...register('TextArea',{minLength:30})}
-          // {...register('h4',{required: true, minLength:30})}
-          // {...(errors?.TextArea?.type === "required" && <p>Requiored Field</p>)}
+          {...register('TextArea',{minLength:30})}         
           {...errors?.h4?.type==='minLength' && "Min Length should be 30 characters"}
         ></textarea>
       </div>

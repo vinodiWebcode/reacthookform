@@ -11,7 +11,7 @@ body.myfont {
   padding-right: 0px;
 }
 .mainContent {
-	margin-top: 128px;
+	margin-top: 112px;
 }
 .formSection {
   background: #f9f9f9;
@@ -49,6 +49,10 @@ h2, h5 {
 }
 a.navbar-brand {
   margin: 17.5px 0px;
+}
+.navbar {
+  padding-top: 0px!important;
+  padding-bottom: 0px!important;
 }
 .postHeader {
   padding: 20px 0px;
@@ -94,12 +98,13 @@ input[type="text"] {
   padding: 4px 4px 4px 15px;
 }
 input {
-  border-radius: 3px;
+  border-radius: 4px;
   border-width: 1px;
   margin: 17.5px 0;
   border-style: solid;
   height: 39px;
   color: #515357;
+  border-color: #e2e2e2;
   width: 100%;
   padding: 4px 4px 4px 15px;
 }
@@ -137,6 +142,7 @@ textarea {
   border-radius: 3px;
   border-width: 1px;
   border-style: solid;
+  border-color: #e2e2e2;
   height: 40px;
   padding: 4px 4px 4px 15px;
   /* height: 130px; */
@@ -167,6 +173,7 @@ textarea {
 .mainFooter .footerText a {
   color: #579eee;
   position: relative;
+  margin-left: 100px;
 }
 footer {
     color: #7f838a;
@@ -255,4 +262,26 @@ select.w-100:hover {
 }
 button.justify-content-center.btn.btn-primary.btn-lg {
   margin-left: 87px;
+  text-transform: uppercase;
+  font-size: 16px;
+}
+button.justify-content-center.btn.btn-primary.btn-lg:focus {
+  outline: none!important;
+  box-shadow: 1px 1px 5px rgba(1, 1, 0, .7);
+}
+svg {
+  cursor: pointer;
+  color: #737578;
+  margin-bottom: 6px;
+  margin-left: 2px;
+}
+.infoStyle p {
+    color: #515357;
+    font-size: 12px;
+}
+textarea:focus {
+  outline: none!important;
+}
+select.w-100:focus {
+  outline: none!important;
 }

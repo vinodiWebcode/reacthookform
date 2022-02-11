@@ -9,8 +9,8 @@ import { Input } from "./Input";
 import AddInfo from "./AddInfo";
 import InfoForm from "./InfoForm";
 import Select from "./Select";
-import { cloudStorageRef, db,storage} from './Backend';
-import { set,ref } from "firebase/database";
+import { cloudStorageRef, db, storage } from "./Backend";
+import { set, ref } from "firebase/database";
 
 import { getDownloadURL, uploadBytesResumable } from "firebase/storage";
 export default function Form() {
@@ -20,65 +20,68 @@ export default function Form() {
     reset,
     formState: { errors },
   } = useForm();
-  
+
   const [captchaVerify, setCaptchaVerify] = useState(false);
   console.log("Captcha value:", captchaVerify);
+  const [resumeLabel, setResumeLabel] = useState("Attach Resume/CV");
+  const [resumeError, setResumeError] = useState("null");
 
-  
-  const uploadResume=(data:{[x: string]: any})=>{
-      const storageRef = cloudStorageRef(storage,'some-random-name');
-      const uploadTask = uploadBytesResumable(storageRef,data.Resume[0])
+  const uploadResume = (data: { [x: string]: any }) => {
+    const storageRef = cloudStorageRef(storage, "some-random-name");
+    const uploadTask = uploadBytesResumable(storageRef, data.Resume[0]);
 
-      uploadTask.on('state_changed', 
-          (snapshot) => {
-            // Observe state change events such as progress, pause, and resume
-            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case 'paused':
-                console.log('Upload is paused');
-                break;
-              case 'running':
-                console.log('Upload is running');
-                break;
-            }
-          }, 
-          (error) => {
-            // Handle unsuccessful uploads
-          }, 
-          () => {
-            // Handle successful uploads on complete
-            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              console.log('File available at', downloadURL);
-              data.Resume = downloadURL
-                // addDoc(collection(db, "candidatess"), data)
-                // .then(() => {
-                //   console.log("Data save successfully");
-                //   reset();
-                // })
-                // .catch((e: any) => console.log("error", e))
-                set(ref(db, "candidatess"), data)
-                .then(() => {
-                  // alert(data);
-                  console.log("DONE");
-                  reset();
-                })
-                .catch((e) => console.log("error", e));
-                // set(ref(db, "candidatess"), data)
-                // .then(() => {
-                //   alert(JSON.stringify(data));
-                //   console.log("DONE");
-                //   reset();
-                // })
-                // .catch((e) => console.log("error", e));
-            });
-          }
-        );
-  }
-         
-    
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused":
+            console.log("Upload is paused");
+            break;
+          case "running":
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        // Handle unsuccessful uploads
+      },
+      () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          console.log("File available at", downloadURL);
+          data.Resume = downloadURL;
+          set(ref(db, "candidatess"), data)
+            .then(() => {
+              // alert(data);
+              console.log("DONE");
+              reset();
+            })
+            .catch((e) => console.log("error", e));
+        });
+      }
+    );
+  };
+  const onInputChage = (e: React.FormEvent<HTMLInputElement>) => {
+    if (e.currentTarget.files && e.currentTarget.files[0]) {
+      console.log(e.currentTarget.files[0].name);
+      setResumeLabel(e.currentTarget.files[0].name);
+
+      if (e.currentTarget.files[0].type !== "application/pdf")
+        setResumeError("Invalid File Format");
+      else if (e.currentTarget.files[0].size > 5 * 1024 * 1024)
+        setResumeError("File size is greater than 5MB");
+      else setResumeError("null");
+    } else {
+      setResumeError("This field is required");
+    }
+  };
+
   return (
     <div className="mainContent">
       <div className="content-section">
@@ -95,11 +98,13 @@ export default function Form() {
       </div>
       <div className="formSection">
         <div className="container">
-          <form onSubmit={handleSubmit((data) => {
-           uploadResume(data)
-                console.log(data)
-              
-            })}            
+          <form
+            onSubmit={handleSubmit((data) => {
+              if (Object.keys(errors).length === 0 && resumeError === "null") {
+                uploadResume(data);
+                console.log(data);
+              }
+            })}
           >
             {/* file uploading */}
 
@@ -108,7 +113,7 @@ export default function Form() {
             </div>
             <div className="formStyle row rowMarBot">
               <div className="col-md-6 col-lg-4">
-                <label className="labelMrgin">Resume/CV </label>
+                <label className="labelMrgin">Resume/CV *</label>
               </div>
               <div className="col-md-6 col-lg-8">
                 <div className="selectFile">
@@ -116,18 +121,21 @@ export default function Form() {
                     <MdAttachFile />
                     ATTACH RESUME/CV
                   </span>
-                
-                  <input type='file' accept='application/pdf'  {...register?{...register('Resume')}:null} />
-                  {errors.file && <p>{errors.file.message}</p>}
+
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onInput={(e) => onInputChage(e)}
+                    {...(register ? { ...register("Resume") } : null)}
+                  />
+                  {resumeError !== "null" && <p>{resumeError}</p>}
                 </div>
               </div>
             </div>
 
-
-
             {/* <Fileupload register={register} errors={errors} /> */}
-            <Input Label="Full Name" register={register} errors={errors} />
-            <Input Label="Email" register={register} errors={errors} />
+            <Input Label="Full Name *" register={register} errors={errors} />
+            <Input Label="Email *" register={register} errors={errors} />
             <Input Label="Phone" register={register} errors={errors} />
             <Input
               Label="Current company"
