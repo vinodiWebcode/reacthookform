@@ -22,6 +22,7 @@ const Prefer: React.FC<Props> = ({
           placeholder="Type your response"
           {...register("PreferedPronoun")}
         />
+        {errors?.h4 && <p>Select text Value</p>}
       </div>
     </div>
   );

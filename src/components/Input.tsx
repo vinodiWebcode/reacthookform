@@ -20,12 +20,12 @@ export const Input: React.FC<Props> = ({
   const getValidation = ()=>{
     var obj: {[key: string]: any} = {};
     switch(Label){
-        case 'Full Name':
+        case 'Full Name *':
             obj.required = true;
             obj.minLength = 10;
             obj.pattern = /[a-zA-Z][a-zA-Z ]+/
             return obj;
-        case 'Email':
+        case 'Email *':
             obj.required = true;
             obj.pattern=/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
             return obj;
@@ -50,7 +50,7 @@ export const Input: React.FC<Props> = ({
       </div>
       <div className="col-md-6 col-lg-8">
         <input  {...register(toPascalCase(Label),getValidation())} />
-        {errors?errors[toPascalCase(Label)]?.type ===' required' && <p>REQUIRED FIELD</p>:null}
+        {errors?errors[toPascalCase(Label)]?.type ==='required' && <p>REQUIRED FIELD</p>:null}
         {errors?errors[toPascalCase(Label)]?.type==='pattern' && <p>Invalid VALUE</p>:null}
         {errors?errors[toPascalCase(Label)]?.type==='minLength' && <p>Min Length error</p>:null}
       </div>

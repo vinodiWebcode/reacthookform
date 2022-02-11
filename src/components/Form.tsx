@@ -71,7 +71,6 @@ export default function Form() {
     if (e.currentTarget.files && e.currentTarget.files[0]) {
       console.log(e.currentTarget.files[0].name);
       setResumeLabel(e.currentTarget.files[0].name);
-
       if (e.currentTarget.files[0].type !== "application/pdf")
         setResumeError("Invalid File Format");
       else if (e.currentTarget.files[0].size > 5 * 1024 * 1024)
@@ -107,7 +106,6 @@ export default function Form() {
             })}
           >
             {/* file uploading */}
-
             <div className="formTitle">
               <h4>Submit your application</h4>
             </div>
