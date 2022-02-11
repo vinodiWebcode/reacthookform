@@ -78,6 +78,7 @@ label {
   font-size: 16px;
   line-height: 1.4;
   vertical-align: middle;
+  color: #737578;
   width: 100%;
 }
 .formStyle {
@@ -244,6 +245,7 @@ a.imageLink {
 select.w-100 {
   background: #e2e2e2;
   border-color: transparent;
+  color: #737578;
 }
 select.w-100:hover {
   background: #c0c0c0;

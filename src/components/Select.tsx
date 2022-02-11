@@ -39,7 +39,7 @@ const Select: React.FC<Props> = ({ register, errors }): JSX.Element => {
               className="w-100"
               {...register("Gender", { required: true })}
             >
-              <option value="">Male</option>
+             <option value="">Select...</option>
               {gender.map((item) => (
                 <option>{item}</option>
               ))}
